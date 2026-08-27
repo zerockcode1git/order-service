@@ -27,7 +27,7 @@ spec:
    spec:
      containers:
        - name: order-service
-         image: zerockcode1/order-service:sha-2c08873
+         image: zerockcode1/order-service:sha-dd7ecea
          imagePullPolicy: Always
          ports:
            - containerPort: 8084
