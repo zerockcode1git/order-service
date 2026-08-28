@@ -1,6 +1,7 @@
 package org.zerock.order_service.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.zerock.order_service.event.OrderCreatedEvent;
 import org.zerock.order_service.service.KafkaProducerService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,4 +29,17 @@ public class OrderController {
 
    return "Message sent!";
  }
+
+ @GetMapping("/helloOrderEvent")
+ public String helloOrderEvent() {
+   log.info("Hello Order Event endpoint called");
+
+   OrderCreatedEvent event = new OrderCreatedEvent(System.currentTimeMillis(), "user00");
+   event.addProduct(10L, 1);
+   event.addProduct(20L, 2);
+
+   kafkaProducerService.sendOrderCreatedEvent(event);
+   return "Order Event sent!";
+ }
+
 }
