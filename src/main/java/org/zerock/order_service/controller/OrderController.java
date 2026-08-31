@@ -7,6 +7,7 @@ import org.zerock.order_service.service.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @Log4j2
@@ -42,6 +43,13 @@ public class OrderController {
    return "Order Event sent!";
  }
 
+  @GetMapping("/helloAuth")
+ public String[] hello(@RequestHeader("X-Authenticated") boolean authenticated,
+                     @RequestHeader("X-User-Id") String userId,
+                     @RequestHeader("X-User-Role") String userRole) {
+   return new String[]{"Hello", "Order", "Service", 
+   "Authenticated: " + authenticated, "User ID: " + userId, "User Role: " + userRole};
+ }
  
 
 }
