@@ -1,6 +1,8 @@
 package org.zerock.order_service.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.zerock.order_service.config.anno.AuthUser;
+import org.zerock.order_service.dto.AuthenticatedUser;
 import org.zerock.order_service.event.OrderCreatedEvent;
 import org.zerock.order_service.service.KafkaProducerService;
 
@@ -14,42 +16,49 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @RequiredArgsConstructor
 public class OrderController {
 
- private final KafkaProducerService kafkaProducerService;
+    private final KafkaProducerService kafkaProducerService;
 
- @GetMapping("hello")
- public String[] hello() {
-     return new String[]{"Hello", "Order", "Service"};
- }
+    @GetMapping("hello")
+    public String[] hello() {
+        return new String[]{"Hello", "Order", "Service"};
+    }
 
- @GetMapping("sendMsg")
- public String sendMsg() {
+    @GetMapping("sendMsg")
+    public String sendMsg() {
 
-   String message = "Hello, Kafka! " + System.currentTimeMillis();
+        String message = "Hello, Kafka! " + System.currentTimeMillis();
 
-   kafkaProducerService.sendMessage(message);
+        kafkaProducerService.sendMessage(message);
 
-   return "Message sent!";
- }
+        return "Message sent!";
+    }
 
- @GetMapping("/helloOrderEvent")
- public String helloOrderEvent() {
-   log.info("Hello Order Event endpoint called");
+    @GetMapping("/helloOrderEvent")
+    public String helloOrderEvent() {
+        log.info("Hello Order Event endpoint called");
 
-   OrderCreatedEvent event = new OrderCreatedEvent(System.currentTimeMillis(), "user00");
-   event.addProduct(10L, 1);
-   event.addProduct(20L, 2);
+        OrderCreatedEvent event = new OrderCreatedEvent(System.currentTimeMillis(), "user00");
+        event.addProduct(10L, 1);
+        event.addProduct(20L, 2);
 
-   kafkaProducerService.sendOrderCreatedEvent(event);
-   return "Order Event sent!";
- }
+        kafkaProducerService.sendOrderCreatedEvent(event);
+        return "Order Event sent!";
+    }
 
-  @GetMapping("/helloAuth")
- public String[] hello(@RequestHeader("X-Authenticated") boolean authenticated,
-                     @RequestHeader("X-User-Id") String userId,
-                     @RequestHeader("X-User-Role") String userRole) {
-   return new String[]{"Hello", "Order", "Service", 
-   "Authenticated: " + authenticated, "User ID: " + userId, "User Role: " + userRole};
- }
- 
+    @GetMapping("/helloAuth")
+    public String[] helloAuth(@RequestHeader("X-Authenticated") boolean authenticated,
+                               @RequestHeader("X-User-Id") String userId,
+                               @RequestHeader("X-User-Role") String userRole) {
+        return new String[]{"Hello", "Order", "Service",
+                "Authenticated: " + authenticated, "User ID: " + userId, "User Role: " + userRole};
+    }
+
+    @GetMapping("/helloAuth2")
+    public String[] helloAuth2(@AuthUser AuthenticatedUser user) {
+        return new String[]{"Hello", "Order", "Service",
+                "Authenticated: " + user.authenticated(),
+                "User ID: " + user.userId(),
+                "User Role: " + user.userRole()};
+    }
 
 }
