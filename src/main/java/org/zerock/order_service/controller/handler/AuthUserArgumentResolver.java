@@ -10,7 +10,6 @@ import org.zerock.order_service.dto.AuthenticatedUser;
 
 // Servlet (HTTP 요청 객체) import
 import jakarta.servlet.http.HttpServletRequest; 
-// 참고: Spring Boot 2.x 이하를 사용 중이라면 javax.servlet.http.HttpServletRequest 로 변경하세요.
 
 
 
